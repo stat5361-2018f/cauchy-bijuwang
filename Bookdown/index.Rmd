@@ -12,8 +12,40 @@ link-citations: yes
 keywords: Monte Carlo, Arithmetics
 description: "First time to use bookdown."
 ---
-
 # Proofs and Loglikelihood Function Plot against $\theta$
 ## Proofs
+The likelihood function is
+$$L(\theta)=\prod^{n}_{i=1}\frac{1}{\pi[1+(X_{i}-\theta)^{2}]}$$
+Hence, the log likelihood fucntion is
+\begin{equation}
+l(\theta)=\log L(\theta)=\log \prod^{n}_{i=1}\frac{1}{\pi[1+(X_{i}-\theta)^{2}]}=-n\log\pi-\sum^{n}_{i=1}\log[1+(\theta-X_{i})^{2}]
+\end{equation}
+Further
+\begin{equation}
+l'(\theta)=-\sum^{n}_{i=1}\frac{d}{d\theta}\log[1+(\theta-X_{i})^{2}]=-2\sum^{n}_{i=1}\frac{\theta-X_{i}}{1+(\theta-X_{i})^{2}}
+\end{equation}
+Compute the second derivative according to $l'(\theta)$
+\begin{equation}
+l''(\theta)=-2\sum^{n}_{i=1}\frac{d}{d\theta}\frac{\theta-X_{i}}{1+(\theta-X_{i})^{2}}=-2\sum^{n}_{i=1}\frac{1-(\theta-X_{i})^{2}}{[1+(\theta-X_{i})^{2}]^{2}}
+\end{equation}
+Therefore, the Fisher information is
+\begin{equation}
+\begin{split}
+I_{n}(\theta) &=-E_{X}[l''(\theta)]\\
+&=2nE_{X}\left[\frac{1-(\theta-X)^{2}}{[1+(\theta-X)^{2}]^{2}}\right]\\
+&=2n\int^{\infty}_{-\infty}\frac{1-(x-\theta)^{2}}{[1+(x-\theta)^{2}]^{2}}\frac{1}{\pi[1+(x-\theta)^{2}]}dx\\
+&=\frac{2n}{\pi}\int^{\infty}_{-\infty}\frac{1-x^{2}}{(1+x^{2})^{2}}\frac{1}{1+x^{2}}dx=\frac{2n}{\pi}\int^{\infty}_{-\infty}\left(\frac{x}{1+x^{2}}\right)'\frac{1}{1+x^{2}}dx=\frac{2n}{\pi}\left[\left.\frac{x}{(1+x^{2})^{2}}\right|^{\infty}_{-\infty}+\int^{\infty}_{-\infty}\frac{2x^{2}}{(1+x^{2})^{3}}\right]\\
+&=\frac{4n}{\pi}\int^{\infty}_{-\infty}\frac{x^{2}}{(1+x^{2})^{3}}dx=\frac{4n}{\pi}\int^{\frac{\pi}{2}}_{-\frac{\pi}{2}}\frac{\tan^{2}\alpha}{(1+\tan^{2}\alpha)^{3}}\sec^{2}\alpha d\alpha=\frac{4n}{\pi}\int^{\frac{\pi}{2}}_{-\frac{\pi}{2}}\frac{1-\cos 4\alpha}{8}d\alpha=\frac{4n}{\pi}\cdot\frac{\pi}{8}\\
+&=\frac{n}{2}
+\end{split}
+\end{equation}
 
 ## Loglikelihood Function Plot against $\theta$
+The following plot is the curve of log likelihood function
+```{r, echo = TRUE, fig.cap = "Log Likelihood Function vs. $\theta$"}
+set.seed(20180909)
+sample <- rcauchy(10, 5)
+
+
+
+```
