@@ -1,1 +1,23 @@
 # Comments
+
+From the results above we can see Newton-Raphson method is the most unstable one since initial values affect the results a lot. While Fishering Scoring refined by Newton-Raphson is the most stable one.\newline
+In order to compare the speed, we set initial value as $3, 5, 7$ for these three algorithms. For Fixed-Point method, since the results are best when the scaling parameter $\alpha=0.25$. Under such condition, we have the following outcomes. In the Fisher Scoring and Newton-Raphson column, the first value represents the root and iteration times from Fishering Score method, the second value means the root and iterations from Newton-Raphson method after we use the root from Fisher Scoring as the initial value for it. It's easy to see the last algorithm is not only the most stable one, but also the fastest one.
+
+
+$~$|Newton-Raphson|Fixed-Point|Fisher Scoring and Newton-Raphson|
+:---:|:---:|:---:|:---:|
+Roots|-5.999e+30|5.685|5.685_5.685|
+Iteration Times|100|7|6_1|
+Table: Roots and Iteration times for Different Algorithms When Initial Value is $3$
+
+$~$|Newton-Raphson|Fixed-Point|Fisher Scoring and Newton-Raphson|
+:---:|:---:|:---:|:---:|
+Roots|5.685|5.686|5.685_5.685|
+Iteration Times|5|7|4_1|
+Table: Roots and Iteration times for Different Algorithms When Initial Value is $5$
+
+$~$|Newton-Raphson|Fixed-Point|Fisher Scoring and Newton-Raphson|
+:---:|:---:|:---:|:---:|
+Roots|1.608e+31|5.686|5.685_5.685|
+Iteration Times|100|8|6_1|
+Table: Roots and Iteration times for Different Algorithms When Initial Value is $7$

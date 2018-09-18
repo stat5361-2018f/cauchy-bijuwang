@@ -1,2 +1,71 @@
 # Fisher Scoring Method and Newton-Raphson Method
 
+From the graph below we can see, by combining Fisher scoring and Newton-Raphson together, the outcomes are quite robust no matter how we choose the initial values comparing with using Newton-Raphson alone.
+
+```{r, message = FALSE, fig.asp=.6, fig.pos = "H", fig.cap = "Scatter Plot of Roots vs. Initial Values"}
+set.seed(20180909)
+sample <- rcauchy(10, 5)
+
+dev1_log_sum <- function(x){
+  dev1_log_sum <- 0
+  for (i in 1:length(sample)) {
+    dev1_log_sum <- dev1_log_sum - 2 * (x - sample[i])/(1 + (x - sample[i])^2)
+  }
+  dev1_log_sum
+}
+
+dev2_log_sum <- function(x){
+  dev2_log_sum <- 0
+  for (i in 1:length(sample)) {
+    dev2_log_sum <- dev2_log_sum - 2 * (1 - (x - sample[i])^2)/(1 + (x - sample[i])^2)^2
+  }
+  dev2_log_sum
+}
+
+I_n <- 10/2
+
+
+fisher.scoring <- function(init, fun, I_n, maxiter = 100, tol = .Machine$double.eps^0.2){
+  x <- init
+  for (i in 1:maxiter) {
+    x1 <- x + fun(x)/I_n
+    if(abs(x1 - x) < tol) break
+    x <- x1
+  }
+  if(i == maxiter)
+    message("Reached the maximum iteration!")
+  
+  return(data.frame(root = x1, iter = i))
+}
+
+
+newton.raphson <- function(init, fun, fun.dev, maxiter = 100, tol = .Machine$double.eps^0.2){
+  x <- init
+  for (i in 1:maxiter) {
+    x1 <- x -fun(x)/fun.dev(x)
+    if(abs(x1 - x) < tol) break
+    x <- x1
+  }
+  if(i == maxiter)
+    message("Reached the maximum iteration!")
+  
+  return(data.frame(root = x1, iter = i))
+}
+
+init <- seq(-10, 20, by = 0.5)
+res <- data.frame(init = init, root = rep(NA, length(init)))
+for (i in 1:length(init)) {
+  res$root[i] <- newton.raphson(fisher.scoring(init[i], dev1_log_sum, I_n)$root, 
+                                dev1_log_sum, dev2_log_sum)$root
+}
+
+library("ggplot2")
+options(digits = 8)
+ggplot(res, aes(x = init, y = root)) + geom_point() + 
+scale_x_continuous(breaks = round(seq(min(res$init), max(res$init), by = 1),1)) +
+labs(x = "Initial Values", y = "Roots from Fisher Scoring and Newton-Raphson") + 
+theme(plot.title = element_text(hjust = 0.5)) + 
+ggtitle("Scatter Plot of Roots vs. Initial Values")
+```
+
+

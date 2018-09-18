@@ -1,5 +1,7 @@
 # Fixed-Point Iterations
 
+From the plots below, we can see when the $\alpha$ decreases, the outcomes become better.
+
 ```{r, message = FALSE, fig.asp = 1, fig.pos = "H", fig.cap = "Scatter Plot of Roots vs. Initial Values for Different Scaling Choices $\\alpha$"}
 set.seed(20180909)
 sample <- rcauchy(10, 5)
@@ -62,5 +64,5 @@ ggtitle(expression("Scatter Plot of Roots vs. Initial Values for"~alpha == 0.25)
 
 grid.arrange(p1, p2, p3, nrow = 3)
 ```
-From the plots above, we can see when the $\alpha$ decreases, the outcomes become better.
+
 

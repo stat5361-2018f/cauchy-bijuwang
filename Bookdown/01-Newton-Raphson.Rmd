@@ -1,5 +1,7 @@
 # Newton-Raphson Method
 
+From the tables and figure below we can see, when the initial values is not less than $5$ and around $5$, the outcomes are quite close to the true value $5$. For instance, from the table when the initial values are $5, 5,5, 6, 6.5$, the roots are $5.69, 5.69, 5.69, 5.69$. While for other initial values, the roots are quite unstable, for some the roots are very large and for others the roots only have magnitude of $10$.
+
 ```{r, message = FALSE, fig.asp=.5, fig.pos = "H", fig.cap = "Scatter Plot of Roots vs. Initial Values"}
 set.seed(20180909)
 sample <- rcauchy(10, 5)
@@ -52,4 +54,4 @@ labs(x = "Initial Values", y = "Roots from Newton-Raphson") +
 theme(plot.title = element_text(hjust = 0.5)) + 
 ggtitle("Scatter Plot of Roots vs. Initial Values")
 ```
-From the above table and figure we can see, when the initial values is not less than $5$ and around $5$, the outcomes are quite close to the true value $5$. For instance, from the table when the initial values are $5, 5,5, 6, 6.5$, the roots are $5.69, 5.69, 5.69, 5.69$. While for other initial values, the roots are quite unstable, for some the roots are very large and for others the roots only have magnitude of $10$.
+
