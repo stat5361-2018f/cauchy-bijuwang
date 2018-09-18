@@ -4,14 +4,6 @@
 set.seed(20180909)
 sample <- rcauchy(10, 5)
 
-log_sum <- function(x){
-  log_sum <- 0
-  for (i in 1:length(sample)) {
-    log_sum <- log_sum -log(pi) - log(1 + (x - sample[i])^2)
-  }
-  log_sum
-}
-
 dev1_log_sum <- function(x){
   dev1_log_sum <- 0
   for (i in 1:length(sample)) {

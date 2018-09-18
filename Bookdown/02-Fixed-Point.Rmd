@@ -1,1 +1,66 @@
 # Fixed-Point Iterations
+
+```{r, message = FALSE, fig.asp = 1, fig.pos = "H", fig.cap = "Scatter Plot of Roots vs. Initial Values for Different Scaling Choices $\\alpha$"}
+set.seed(20180909)
+sample <- rcauchy(10, 5)
+
+dev1_log_sum <- function(x){
+  dev1_log_sum <- 0
+  for (i in 1:length(sample)) {
+    dev1_log_sum <- dev1_log_sum - 2 * (x - sample[i])/(1 + (x - sample[i])^2)
+  }
+  dev1_log_sum
+}
+
+fixed.point <- function(init, fun, alpha, maxiter = 100, tol = .Machine$double.eps^0.2){
+  x <- init
+  for (i in 1:maxiter) {
+    x1 <- alpha * fun(x) + x
+    if(abs(x1 - x) < tol) break
+    x <- x1
+  }
+  if(i == maxiter)
+    message("Reached the maximum iteration!")
+  
+  return(data.frame(root = x1, iter = i))
+}
+
+init <- seq(-10, 20, by = 0.5)
+
+res1 <- data.frame(init = init, root = rep(NA, length(init)))
+res2 <- data.frame(init = init, root = rep(NA, length(init)))
+res3 <- data.frame(init = init, root = rep(NA, length(init)))
+
+for (i in 1:length(init)) {
+  res1$root[i] <- fixed.point(init[i], dev1_log_sum, 1)$root
+}
+for (i in 1:length(init)) {
+  res2$root[i] <- fixed.point(init[i], dev1_log_sum, 0.64)$root
+}
+for (i in 1:length(init)) {
+  res3$root[i] <- fixed.point(init[i], dev1_log_sum, 0.25)$root
+}
+
+library("ggplot2")
+library("gridExtra")
+
+p1 <- ggplot(res1, aes(x = init, y = root)) + geom_point() + 
+scale_x_continuous(breaks = round(seq(min(res1$init), max(res1$init), by = 1),1)) +
+labs(x = "Initial Values", y = "Roots from Fixed-Point") + 
+theme(plot.title = element_text(hjust = 0.5)) + 
+ggtitle(expression("Scatter Plot of Roots vs. Initial Values for"~alpha == 1))
+p2 <- ggplot(res2, aes(x = init, y = root)) + geom_point() + 
+scale_x_continuous(breaks = round(seq(min(res2$init), max(res2$init), by = 1),1)) +
+labs(x = "Initial Values", y = "Roots from Fixed-Point") + 
+theme(plot.title = element_text(hjust = 0.5)) + 
+ggtitle(expression("Scatter Plot of Roots vs. Initial Values for"~alpha == 0.64))
+p3 <- ggplot(res3, aes(x = init, y = root)) + geom_point() + 
+scale_x_continuous(breaks = round(seq(min(res3$init), max(res3$init), by = 1),1)) +
+labs(x = "Initial Values", y = "Roots from Fixed-Point") + 
+theme(plot.title = element_text(hjust = 0.5)) + 
+ggtitle(expression("Scatter Plot of Roots vs. Initial Values for"~alpha == 0.25))
+
+grid.arrange(p1, p2, p3, nrow = 3)
+```
+From the plots above, we can see when the $\alpha$ decreases, the outcomes become better.
+
