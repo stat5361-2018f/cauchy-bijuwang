@@ -1,1 +1,63 @@
 # Newton-Raphson Method
+
+```{r, message = FALSE, fig.asp=.5, fig.pos = "H", fig.cap = "Scatter Plot of Roots vs. Initial Values"}
+set.seed(20180909)
+sample <- rcauchy(10, 5)
+
+log_sum <- function(x){
+  log_sum <- 0
+  for (i in 1:length(sample)) {
+    log_sum <- log_sum -log(pi) - log(1 + (x - sample[i])^2)
+  }
+  log_sum
+}
+
+dev1_log_sum <- function(x){
+  dev1_log_sum <- 0
+  for (i in 1:length(sample)) {
+    dev1_log_sum <- dev1_log_sum - 2 * (x - sample[i])/(1 + (x - sample[i])^2)
+  }
+  dev1_log_sum
+}
+
+dev2_log_sum <- function(x){
+  dev2_log_sum <- 0
+  for (i in 1:length(sample)) {
+    dev2_log_sum <- dev2_log_sum - 2 * (1 - (x - sample[i])^2)/(1 + (x - sample[i])^2)^2
+  }
+  dev2_log_sum
+}
+
+newton.raphson <- function(init, fun, fun.dev, maxiter = 100, tol = .Machine$double.eps^0.2){
+  x <- init
+  for (i in 1:maxiter) {
+    x1 <- x -fun(x)/fun.dev(x)
+    if(abs(x1 - x) < tol) break
+    x <- x1
+  }
+  if(i == maxiter)
+    message("Reached the maximum iteration!")
+  
+  return(data.frame(root = x1, iter = i))
+}
+
+init <- seq(-10, 20, by = 0.5)
+res <- data.frame(init = init, root = rep(NA, length(init)))
+for (i in 1:length(init)) {
+  res$root[i] <- newton.raphson(init[i], dev1_log_sum, dev2_log_sum)$root
+}
+
+res_trans <- t(as.matrix(round(res, 2)))
+rownames(res_trans) <- c("Initial Values", "Roots")
+
+library("pander")
+library("ggplot2")
+pander(res_trans, split.table = 100, style = 'rmarkdown')
+
+ggplot(res, aes(x = init, y = root)) + geom_point() + 
+scale_x_continuous(breaks = round(seq(min(res$init), max(res$init), by = 1),1)) +
+labs(x = "Initial Values", y = "Roots from Newton-Raphson") + 
+theme(plot.title = element_text(hjust = 0.5)) + 
+ggtitle("Scatter Plot of Roots vs. Initial Values")
+```
+From the above table and figure we can see, when the initial values is not less than $5$ and around $5$, the outcomes are quite close to the true value $5$. For instance, from the table when the initial values are $5, 5,5, 6, 6.5$, the roots are $5.69, 5.69, 5.69, 5.69$. While for other initial values, the roots are quite unstable, for some the roots are very large and for others the roots only have magnitude of $10$.
